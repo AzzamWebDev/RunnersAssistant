@@ -177,11 +177,28 @@
     </div>
 
     <script>
-       function generateSchedule() {
-    const easyPace = parseFloat(document.getElementById('easyPace').value);
-    const maxPace = parseFloat(document.getElementById('maxPace').value);
-    const scheduleList = document.getElementById('scheduleList');
-    scheduleList.innerHTML = ''; // Clear previous schedule
+          function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function formatPace(pace) {
+            const minutes = Math.floor(pace);
+            let seconds = Math.round((pace - minutes) * 60);
+            if (seconds >= 60) {
+                seconds = 59;
+            }
+            return `${minutes}.${seconds < 10 ? '0' + seconds : seconds}`;
+        }
+
+        function generateSchedule() {
+            const easyPace = parseFloat(document.getElementById('easyPace').value);
+            const maxPace = parseFloat(document.getElementById('maxPace').value);
+            const scheduleList = document.getElementById('scheduleList');
+            scheduleList.innerHTML = ''; // Clear previous schedule
 
     if (easyPace && maxPace) {
         const intervalIntensity = [
@@ -225,4 +242,3 @@
 }
 
 </script>
-
