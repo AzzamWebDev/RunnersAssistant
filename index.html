@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Lari</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://health.detik.com/detik.com/d-6605782/running-track.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333; /* Dark text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 110%;
+            backdrop-filter: blur(5px);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* White with transparency */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 2;
+        }
+        .header {
+            background-color: #3498db; /* Light blue */
+            color: #fff;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            font-size: 24px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #2980b9; /* Pastel blue */
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-radius: 0 0 15px 15px;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .navbar a:hover {
+            background-color: #1c6ea4; /* Dark blue */
+        }
+        .button {
+            background-color: #3498db; /* Light blue */
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            margin: 15px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .button:hover {
+            background-color: #2980b9; /* Pastel blue */
+            transform: translateY(-2px);
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        .input-group input {
+            padding: 15px;
+            width: calc(100% - 30px);
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .input-group input:focus {
+            border-color: #3498db; /* Light blue */
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .footer {
+            background-color: #3498db; /* Light blue */
+            color: #fff;
+            padding: 10px;
+            border-radius: 0 0 15px 15px;
+            margin-top: 20px;
+        }
+        .result {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+            }
+            .navbar {
+                flex-wrap: wrap;
+            }
+            .navbar a {
+                flex: 1 0 50%; /* Two items per row */
+                margin: 5px;
+            }
+            .input-group input {
+                width: 100%;
+            }
+            .button {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Runners</h1>
+            <h1>Assistant</h1>
+        </div>
+        <div class="navbar">
+            <a href="#" onclick="showPage('pagehome')">Halaman Utama</a>
+            <a href="istilah.html" onclick="showPage('')">Istilah Lari</a>
+            <a href="jadwal.html" onclick="showPage('')"> Buat Jadwal Lari</a>
+            <a href="#" onclick="showPage('page1')">Hitung Jarak</a>
+            <a href="#" onclick="showPage('page2')">Hitung Pace</a>
+            <a href="#" onclick="showPage('page3')">Hitung Waktu</a>
+        </div>
+        <div id="content">
+            <div id="pagehome" class="page">
+                <h2>Selamat Datang di Kalkulator Lari By Azzam</h2>
+                <p>Pilih salah satu halaman untuk menghitung jarak, pace, atau waktu lari Anda.</p>
+            </div>
+            <div id="page1" class="page active">
+                <h2>Hitung Jarak</h2>
+                <div class="input-group">
+                    <input type="number" id="time1" placeholder="Masukkan waktu menit ( 00.00 )">
+                    <input type="number" id="pace1" placeholder="Masukkan pace ( 02.10 )" step="0.01">
+                </div>
+                <button class="button" onclick="calculateDistance()">Hitung Jarak</button>
+                <div class="result" id="result1"></div>
+            </div>
+            <div id="page2" class="page">
+                <h2>Hitung Pace</h2>
+                <div class="input-group">
+                    <input type="number" id="time2" placeholder="Masukkan waktu menit ( 00.00 )">
+                    <input type="number" id="distance2" placeholder="Masukkan jarak kilometer ( 00,00 [km] )" step="0.01">
+                </div>
+                <button class="button" onclick="calculatePace()">Hitung Pace</button>
+                <div class="result" id="result2"></div>
+            </div>
+            <div id="page3" class="page">
+                <h2>Hitung Waktu</h2>
+                <div class="input-group">
+                    <input type="number" id="distance3" placeholder="Masukkan jarak kilometer ( 00,00 [km] )" step="0.01">
+                    <input type="number" id="pace3" placeholder="Masukkan pace ( 02.10 )" step="0.01">
+                </div>
+                <button class="button" onclick="calculateTime()">Hitung Waktu</button>
+                <div class="result" id="result3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function calculateDistance() {
+            const time = document.getElementById('time1').value;
+            const pace = document.getElementById('pace1').value;
+            if (time && pace) {
+                const distance = (time / pace).toFixed(2);
+                document.getElementById('result1').textContent = `Jarak: ${distance} km`;
+            } else {
+                document.getElementById('result1').textContent = 'Mohon masukkan waktu dan pace';
+            }
+        }
+
+        function calculatePace() {
+            const time = document.getElementById('time2').value;
+            const distance = document.getElementById('distance2').value;
+            if (time && distance) {
+                const pace = (time / distance).toFixed(2);
+                document.getElementById('result2').textContent = `Pace: ${pace} menit/km`;
+            } else {
+                document.getElementById('result2').textContent = 'Mohon masukkan waktu dan jarak';
+            }
+        }
+
+        function calculateTime() {
+            const distance = document.getElementById('distance3').value;
+            const pace = document.getElementById('pace3').value;
+            if (distance && pace) {
+                const time = (distance * pace).toFixed(2);
+                document.getElementById('result3').textContent = `Waktu: ${time} menit`;
+            } else {
+                document.getElementById('result3').textContent = 'Mohon masukkan jarak dan pace';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunnersAssistant: Jadwal Lari</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://source.unsplash.com/1600x900/?running') no-repeat center center fixed;
+            background-size: cover;
+            color: #333; /* Dark text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 110%;
+            backdrop-filter: blur(5px);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* White with transparency */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 2;
+        }
+        .header {
+            background-color: #3498db; /* Light blue */
+            color: #fff;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            font-size: 24px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #2980b9; /* Pastel blue */
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-radius: 0 0 15px 15px;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .navbar a:hover {
+            background-color: #1c6ea4; /* Dark blue */
+        }
+        .button {
+            background-color: #3498db; /* Light blue */
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            margin: 15px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .button:hover {
+            background-color: #2980b9; /* Pastel blue */
+            transform: translateY(-2px);
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        .input-group input {
+            padding: 15px;
+            width: calc(100% - 30px);
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .input-group input:focus {
+            border-color: #3498db; /* Light blue */
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .footer {
+            background-color: #3498db; /* Light blue */
+            color: #fff;
+            padding: 10px;
+            border-radius: 0 0 15px 15px;
+            margin-top: 20px;
+        }
+        .result {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .result-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .result-list li {
+            background-color: #e8e8e8;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+            }
+            .navbar {
+                flex-wrap: wrap;
+            }
+            .navbar a {
+                flex: 1 0 50%; /* Two items per row */
+                margin: 5px;
+            }
+            .input-group input {
+                width: 100%;
+            }
+            .button {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Runners</h1>
+            <h1>Assistant</h1>
+        </div>
+        <div class="navbar">
+            <a href="#" onclick="showPage('')">Jadwal Lari</a>
+            <a href="index.html">Back to Home</a>
+        </div>
+        <div id="content">
+            <div id="page5" class="page active">
+                <h2>Buat Jadwal Lari</h2>
+                <div class="input-group">
+                    <input type="number" id="easyPace" placeholder="Masukkan pace easy run (menit/km)" step="0.01">
+                    <input type="number" id="maxPace" placeholder="Masukkan pace speed anda (menit/km)" step="0.01">
+                </div>
+                <button class="button" onclick="generateSchedule()">Buat Jadwal</button>
+                <div class="result" id="result4">
+                    <ul class="result-list" id="scheduleList"></ul>
+                </div>
+            </div>
+            <div id="page4" class="page">
+                <h2>Selamat Datang di Kalkulator Lari</h2>
+                <p>Pilih salah satu halaman untuk menghitung jarak, pace, atau waktu lari Anda.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       function generateSchedule() {
+    const easyPace = parseFloat(document.getElementById('easyPace').value);
+    const maxPace = parseFloat(document.getElementById('maxPace').value);
+    const scheduleList = document.getElementById('scheduleList');
+    scheduleList.innerHTML = ''; // Clear previous schedule
+
+    if (easyPace && maxPace) {
+        const intervalIntensity = [
+            { type: 'Interval', intensity: 'High', details: `Interval 100x8 dengan pace ${maxPace} menit/km` },
+            { type: 'Interval', intensity: 'Moderate', details: `Interval 200x6 dengan pace ${maxPace} menit/km` },
+            { type: 'Interval', intensity: 'Low', details: `Interval 400x4 dengan pace ${maxPace} menit/km` }
+        ];
+        const tempoIntensity = [
+            { type: 'Tempo', intensity: 'High', details: `Tempo run 1000x5 dengan pace ${maxPace} menit/km` },
+            { type: 'Tempo', intensity: 'Moderate', details: `Tempo run 2000x3 dengan pace ${maxPace} menit/km` },
+            { type: 'Tempo', intensity: 'Low', details: `Tempo run 3000x2 dengan pace ${maxPace} menit/km` }
+        ];
+
+        // Randomly select intensity for interval and tempo
+        const randomInterval = intervalIntensity[Math.floor(Math.random() * intervalIntensity.length)];
+        const randomTempo = tempoIntensity[Math.floor(Math.random() * tempoIntensity.length)];
+
+        const schedule = [
+            { day: 'Senin', type: randomTempo.type, intensity: randomTempo.intensity, activity: randomTempo.details },
+            { day: 'Selasa', type: 'Endurance', intensity: 'Moderate', activity: `Long run 15-20 km dengan pace ${easyPace.toFixed(2)} menit/km` },
+            { day: 'Rabu', type: randomInterval.type, intensity: randomInterval.intensity, activity: randomInterval.details },
+            { day: 'Kamis', type: 'Strength', intensity: 'Low', activity: 'Latihan core perut dan kaki' },
+            { day: 'Jumat', type: 'Recovery', intensity: 'Low', activity: 'Recovery run 5-10 km dengan pace easy run' },
+            { day: 'Sabtu', type: 'Endurance', intensity: 'High', activity: `Long run 25-30 km dengan pace ${easyPace.toFixed(2)} menit/km` },
+            { day: 'Minggu', type: 'Recovery', intensity: 'Low', activity: 'Recovery run 5-10 km dengan pace easy run' }
+        ];
+
+        // Generate list items for each day's schedule
+        schedule.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<strong>${item.day}</strong>: ${item.type} (${item.intensity}) - ${item.activity}`;
+            scheduleList.appendChild(listItem);
+        });
+    } else {
+        // Display error if pace values are not valid
+        const errorMessage = document.createElement('li');
+        errorMessage.style.color = 'red';
+        errorMessage.textContent = 'Silakan masukkan nilai pace yang valid.';
+        scheduleList.appendChild(errorMessage);
+    }
+}
+
+</script>
+
