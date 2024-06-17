@@ -154,7 +154,6 @@
             <h1>Assistant</h1>
         </div>
         <div class="navbar">
-            <a href="#" onclick="showPage('')">Jadwal Lari</a>
             <a href="index.html">Back to Home</a>
         </div>
         <div id="content">
@@ -217,13 +216,13 @@
         const randomTempo = tempoIntensity[Math.floor(Math.random() * tempoIntensity.length)];
 
         const schedule = [
-            { day: 'Senin', type: randomTempo.type, intensity: randomTempo.intensity, activity: randomTempo.details },
+            { day: 'Senin', type: 'Rest', intensity: 'None', activity: 'Istirahat' },
             { day: 'Selasa', type: 'Endurance', intensity: 'Moderate', activity: `Long run 15-20 km dengan pace ${easyPace.toFixed(2)} menit/km` },
             { day: 'Rabu', type: randomInterval.type, intensity: randomInterval.intensity, activity: randomInterval.details },
-            { day: 'Kamis', type: 'Strength', intensity: 'Low', activity: 'Latihan core perut dan kaki' },
-            { day: 'Jumat', type: 'Recovery', intensity: 'Low', activity: 'Recovery run 5-10 km dengan pace easy run' },
-            { day: 'Sabtu', type: 'Endurance', intensity: 'High', activity: `Long run 25-30 km dengan pace ${easyPace.toFixed(2)} menit/km` },
-            { day: 'Minggu', type: 'Recovery', intensity: 'Low', activity: 'Recovery run 5-10 km dengan pace easy run' }
+            { day: 'Kamis', type: 'Strength', intensity: 'Moderate', activity: 'Latihan core perut dan kaki' },
+            { day: 'Jumat', type: 'Endurance', intensity: 'Low', activity: `Easy run 5-10 km  ${easyPace.toFixed(2)} menit/km` },
+            { day: 'Sabtu',type: randomTempo.type, intensity: randomTempo.intensity, activity: randomTempo.details },
+            { day: 'Minggu', type: 'Recovery', intensity: 'Low', activity: 'Jalan / Lari 30 Menit Santai ' },
         ];
 
         // Generate list items for each day's schedule
